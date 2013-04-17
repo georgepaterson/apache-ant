@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<!--
+	Apache Ant UI build project.
+-->
+<project name="UI build" default="build" basedir="../">
+    <!--
+		Project configuration.
+    -->
+    <property file="config/default.properties"/>
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+        <classpath>
+            <pathelement location="./${tools}/${antContrib}"/>
+        </classpath>
+    </taskdef>	
+	<!--
+		Development environment build.
+		Default:
+			ant build
+	-->
+    <target name="build" description="Build target for the environment">
+		<echo message="Building environment..."/>
+		<antcall target="build.task" />
+	</target>
+	<!--
+		Development environment build task.
+	-->
+    <target name="build.task" description="Calls all environment targets" 
+            depends="remove,
+					copy,				
+					jshint,
+					csslint,
+					deploy.server" />
+	<!--
+		Clean the publish folder of the previous build.
+		Called as part of build task or can be called separately.
+		Default:
+			ant remove
+	-->
+    <target name="remove" description="Removes the previous build (Deletes the publish directory)">
+        <echo message="Removing the previous publish directory..."/>
+        <delete dir="./${publish}/"/>
+    </target>
+	<!--
+		Copy build.
+		Called as part of build task or can be called separately.
+		Default:
+			ant copy 
+    -->	
+	<target name="copy" description="Copy all source files to the publish location for manipulation and deployment">
+		<echo message="Copying production files to the publish folder..."/>
+		<!-- Files to be excluded from copy -->
+        <var name="excluded" value="${exclude}"/>
+		<!-- Copy over files except excluded files -->
+		<copy todir="./${publish}">
+			<fileset dir="${source.web}/" excludes="${exclude}"/>
+		</copy>
+		<echo message="A copy of all web files are now in: ./${publish}."/>
+	</target>
+	<!--
+		JSHint.
+		Called as part of build task or can be called separately.
+		Default:
+			ant jshint
+    -->
+	<target name="jshint">
+		<apply dir="${source.js}" executable="java" parallel="false" failonerror="true">
+			<fileset dir="./">
+				<include name="**/${source.js}/*.js"/>
+				<exclude name="**/*.min.js"/>
+				<exclude name="**/${publish}/"/>
+				<exclude name="**/${source.js}/external"/>
+			</fileset>
+			<arg value="-jar" />
+			<arg path="./${tools}/${rhino}" />
+			<arg path="./${tools}/${jshint}" />
+			<srcfile/>
+			<arg value="${jshint.options}" />
+		</apply>
+		<echo>JSHint successful</echo>
+	</target>
+	<!--
+		CSSLint.
+		Called as part of build task or can be called separately.
+		Default:
+			ant csslint
+	-->
+    <target name="csslint">
+        <apply dir="${source.css}" executable="java" parallel="false" failonerror="true">
+            <fileset dir="./">
+                <include name="**/${source.css}/*.css"/>
+                <exclude name="**/*.min.css"/>
+                <exclude name="**/${publish}/"/>
+            </fileset>
+            <arg value="-jar" />
+            <arg path="./${tools}/${rhino}" />
+            <arg path="./${tools}/${csslint}" />
+            <srcfile/>
+            <arg value="${csslint.options}" />
+        </apply>
+        <echo>CSSLint completed</echo>
+    </target>
+	<!--
+		Remove server files.
+        SSH in to server to perform a command line arguement
+    -->
+	<target name="remove.server" description="Remove files from the development server">
+		<sshexec host="${hostname}"
+			username="${username}"
+			password="${password}"
+			command="cd /var/www/html/dev/; rm -rf web;"
+			trust="true"/>
+	</target>
+	<!--
+		Deploy server siles.
+    -->	
+	<target name="deploy.server" description="Deploy files to the development server">
+		<echo>Copying to ${server.dev.hostname}...</echo>
+		<echo>About to send the files...</echo>
+		<scp todir="${username}@${hostname}:${directory}/" password="${password}" trust="yes">
+			<fileset dir="${dir.publish}"></fileset>
+		</scp>
+		<echo>Files sent</echo>
+	</target>
+</project>
