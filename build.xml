@@ -79,6 +79,39 @@
 		<echo>JSHint successful</echo>
 	</target>
 	<!--
+		Minification and concatenation of JavaScript
+    -->
+	<target name="js.optimise" description="Minify and Concatenate the JS files">
+	    <echo message="Concatenating JS files..."/>
+		<concat destfile="./${publish}/${source.js}/build.all.js">
+	        <fileset file="./${publish}/${source.js}/external/jquery.js" />
+			<fileset dir="./${publish}/${source.js}/">
+				<include name="*.js" />
+				<exclude name="config.js" />
+	        </fileset>
+	    </concat>
+		<echo message="Minifying JS file..."/>		
+		<apply executable="java" parallel="false">
+			<fileset dir="./${publish}/${source.js}">
+				<include name="**/mns.all.js" />	
+	        </fileset>
+			<arg line="-jar"/>
+			<arg path="./${tools}/${yuicompressor}"/>
+			<srcfile/>
+			<arg line="-o"/>
+			<mapper type="glob" from="*.js" to="../${publish}/${source.js}/*.min.js"/>
+			<targetfile/>
+		</apply>
+		<delete>
+			<fileset file="./${publish}/${source.js}/external/jquery.js" />
+			<fileset dir="./${publish}/${source.js}/">
+				<include name="*.js" />
+				<exclude name="*.min.js" />
+				<exclude name="*.config.js" />
+	        </fileset>
+		</delete>
+	</target>
+	<!--
 		CSSLint.
 		Called as part of build task or can be called separately.
 		Default:
@@ -98,7 +131,37 @@
             <arg value="${csslint.options}" />
         </apply>
         <echo>CSSLint completed</echo>
-    </target>
+	<!--
+		Minification and concatenation of CSS
+    --> 
+	<target name="css.optimise" description="Minify example.css">
+	    <echo message="Concatenating CSS files..."/>
+		<concat destfile="./${publish}/${source.css}/build.all.css">
+	        <fileset file="./${publish}/${source.css}/external/example.css" />
+			<fileset dir="./${publish}/${source.css}/">
+				<include name="*.css" />
+				<exclude name="demo.css" />
+	        </fileset>
+	    </concat>  
+		<echo message="Minifying CSS files..."/>	
+		<apply executable="java" parallel="false">
+			<fileset dir="./${publish}/${source.css}">
+				<include name="**/build.all.css" />	
+            </fileset>
+			<arg line="-jar"/>
+			<arg path="./${tools}/${yuicompressor}"/>
+			<srcfile/>
+			<arg line="-o"/>
+			<mapper type="glob" from="*.css" to="../${publish}/${source.css}/*.min.css"/>
+			<targetfile/>
+		</apply>
+		<delete>
+			<fileset dir="./${publish}/${source.css}/">
+				<include name="*.css" />
+				<exclude name="*.min.css" />
+	        </fileset>
+		</delete>
+	</target>
 	<!--
 		Remove server files.
         SSH in to server to perform a command line arguement
