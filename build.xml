@@ -174,13 +174,13 @@
 			trust="true"/>
 	</target>
 	<!--
-		Deploy server siles.
+		Deploy server files.
     -->	
 	<target name="deploy.server" description="Deploy files to the development server">
 		<echo>Copying to ${server.dev.hostname}...</echo>
 		<echo>About to send the files...</echo>
 		<scp todir="${username}@${hostname}:${directory}/" password="${password}" trust="yes">
-			<fileset dir="${dir.publish}"></fileset>
+			<fileset dir="${publish}"></fileset>
 		</scp>
 		<echo>Files sent</echo>
 	</target>
