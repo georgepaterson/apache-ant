@@ -93,7 +93,7 @@
         <echo message="Minifying JS file..."/>		
         <apply executable="java" parallel="false">
             <fileset dir="./${publish}/${source.js}">
-                <include name="**/mns.all.js" />	
+                <include name="**/build.all.js" />	
             </fileset>
             <arg line="-jar"/>
             <arg path="./${tools}/${yuicompressor}"/>
@@ -171,7 +171,7 @@
         <sshexec host="${hostname}"
             username="${username}"
             password="${password}"
-            command="cd /var/www/html/dev/; rm -rf web;"
+            command="cd /var/www/; rm -rf web;"
             trust="true" />
     </target>
     <!--

@@ -142,7 +142,7 @@ Specifc naming conventions and locations can be changed within the build script 
         <echo message="Minifying JS file..."/>		
         <apply executable="java" parallel="false">
             <fileset dir="./${publish}/${source.js}">
-                <include name="**/mns.all.js" />	
+                <include name="**/build.all.js" />	
             </fileset>
             <arg line="-jar"/>
             <arg path="./${tools}/${yuicompressor}"/>
@@ -226,7 +226,7 @@ Specifc naming conventions and locations can be changed within the build script 
         <sshexec host="${hostname}"
             username="${username}"
             password="${password}"
-            command="cd /var/www/html/dev/; rm -rf web;"
+            command="cd /var/www/; rm -rf web;"
             trust="true" />
     </target>
     
