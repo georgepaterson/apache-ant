@@ -20,7 +20,17 @@ Mac OSX users could use [MacPorts](http://www.macports.org/install.php):
     
     $ sudo port install ant-contrib 
 
-    
+## Folder structure
+
+The folder structure used in a project should be similar to the one used in this repository. 
+
+*   A build.xml file containing the build script.
+*   Config folder for build properties.
+*   Tools folder to store scripts or binaries used by Ant tasks.
+
+This structure should be placed in within your project, however it should be seperate to your project source code as it will need to run tasks on the source code.
+
+## Script structure    
 
 
   
