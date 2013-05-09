@@ -34,7 +34,17 @@ Specifc naming conventions and locations can be changed within the build script 
 
 ## Script structure    
 
+An Ant build script has a basic structure to initialise, configure and create a default target, it is then expanded by creating further targets and tasks that are used by the project.
+
 ### Initialise
+
+Initialising the project has a number of default attributes:
+
+*   Name is a human readable identifier for the project.
+*   Default is the default target for the Ant project.
+*   Basedir allows the setting of a base directory for the project.
+
+Example project identifier, attributes should be changed as required:
 
     <!--
         Apache Ant UI build project.
@@ -42,7 +52,13 @@ Specifc naming conventions and locations can be changed within the build script 
     <project name="UI build" default="build" basedir="../">
 
 ### Configuration    
-    
+ 
+Confirguring the project we need to define a number of properties.
+
+*   The file attribute of the property tag points to a file that contains property variables for the project. These can be the default properties of project specific properties.
+*   The resource attribute of the taskdef tag points to the antcontrib properties files. We use the network version of this file.
+*   The location attribute of the pathelement tag points uses the constants defined in the default.properties config file to point to the location of the antcontrib binary.
+   
     <!--
         Project configuration.
     -->
