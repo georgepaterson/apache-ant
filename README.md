@@ -58,7 +58,9 @@ Confirguring the project we need to define a number of properties.
 *   The file attribute of the property tag points to a file that contains property variables for the project. These can be the default properties of project specific properties.
 *   The resource attribute of the taskdef tag points to the antcontrib properties files. We use the network version of this file.
 *   The location attribute of the pathelement tag points uses the constants defined in the default.properties config file to point to the location of the antcontrib binary.
-   
+
+Example project configuration:
+
     <!--
         Project configuration.
     -->
