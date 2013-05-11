@@ -72,6 +72,14 @@ Example project configuration:
     </taskdef>
     
 ### Default target    
+
+The build script can be made of many targets, this is the default target called when the project is initialised.
+
+*   Target name attribute is the name that can be used to call the task.
+*   Echo message allows a message to be displayed in the command line to the user who initiated the task.
+*   The target attribute of the antcall tag allows the calling of another task, in this case our actual build task.
+
+Example defaut target:
     
     <!--
         Development environment build.
@@ -82,6 +90,12 @@ Example project configuration:
         <echo message="Building environment..." />
         <antcall target="build.task" />
     </target>
+
+Further targets can be created using the same format. When calling new targets simply refer to them by name in the command line. So for a target called test:
+
+    ant test
+ 
+The test target will be call rather than the default target. 
     
 ### Build tasks
 
